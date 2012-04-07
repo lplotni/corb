@@ -76,7 +76,7 @@ public class Transform implements Callable<String> {
             session.close();
             session = null;
             logger.info(response);
-            return response;
+            return inputUri;
         } finally {
             if (null != session) {
                 session.close();
