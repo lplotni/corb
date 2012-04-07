@@ -144,6 +144,8 @@ public class Manager implements Runnable {
 
     private SimpleLogger logger;
 
+    private SimpleLogger outputLogger;
+
     private String moduleUri;
 
     private Thread monitorThread;
@@ -227,6 +229,7 @@ public class Manager implements Runnable {
      */
     public void run() {
         configureLogger();
+        configureOutputLogger();
         logger.info(NAME + " starting: " + versionMessage);
         long maxMemory = Runtime.getRuntime().maxMemory() / (1024 * 1024);
         logger.info("maximum heap size = " + maxMemory + " MiB");
@@ -487,7 +490,7 @@ public class Manager implements Runnable {
                 // all uris queue as quickly as possible
                 if (isFirst) {
                     isFirst = false;
-                    completionService.submit(tf.newTask(uri));
+                    completionService.submit(tf.newTask(uri, outputLogger));
                     urisArray[count] = null;
                     logger.info("received first uri: " + uri);
                 } else {
@@ -526,7 +529,7 @@ public class Manager implements Runnable {
                     break;
                 }
                 uri = new String(urisArray[i]);
-                completionService.submit(tf.newTask(uri));
+                completionService.submit(tf.newTask(uri, outputLogger));
                 urisArray[i] = null;
 
                 String msg = "queued " + i + "/" + total + ": " + uri;
@@ -576,6 +579,17 @@ public class Manager implements Runnable {
         props.setProperty("LOG_LEVEL", options.getLogLevel());
         props.setProperty("LOG_HANDLER", options.getLogHandler());
         logger.configureLogger(props);
+    }
+
+    private void configureOutputLogger() {
+        if (outputLogger == null) {
+            outputLogger = SimpleLogger.getSimpleLogger("output");
+        }
+        Properties props = new Properties();
+        props.setProperty("LOG_HANDLER", "FILE");
+        props.setProperty("LOG_FILEHANDLER_PATH", "output-%u-%g.log");
+        props.setProperty("LOG_FORMATTER", "BareText");
+        outputLogger.configureLogger(props);
     }
 
     /**

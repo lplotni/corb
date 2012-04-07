@@ -21,6 +21,8 @@ package com.marklogic.developer.corb;
 import com.marklogic.xcc.ContentSource;
 import com.marklogic.xcc.Session;
 
+import com.marklogic.developer.SimpleLogger;
+
 /**
  * @author Michael Blakeley, michael.blakeley@marklogic.com
  * 
@@ -43,7 +45,7 @@ public class TaskFactory {
      * @param _uri
      * @return
      */
-    public Transform newTask(String _uri) {
+    public Transform newTask(String _uri, SimpleLogger _logger) {
         if (null == contentSource) {
             throw new NullPointerException("null content source");
         }
@@ -55,7 +57,7 @@ public class TaskFactory {
         }
 
         // pass a reference to this factory, for later
-        return new Transform(this, _uri);
+        return new Transform(this, _uri, _logger);
     }
 
     /**

@@ -23,6 +23,8 @@ import java.util.concurrent.Callable;
 import com.marklogic.xcc.Request;
 import com.marklogic.xcc.Session;
 
+import com.marklogic.developer.SimpleLogger;
+
 /**
  * @author Michael Blakeley, michael.blakeley@marklogic.com
  *
@@ -33,13 +35,16 @@ public class Transform implements Callable<String> {
 
     protected TaskFactory factory;
 
+    protected SimpleLogger logger;
+    
     /**
      * @param _tf
      * @param _uri
      */
-    public Transform(TaskFactory _tf, String _uri) {
+    public Transform(TaskFactory _tf, String _uri, SimpleLogger _logger) {
         factory = _tf;
         this.inputUri = _uri;
+        this.logger = _logger;
     }
 
     /*
@@ -70,6 +75,7 @@ public class Transform implements Callable<String> {
             String response = session.submitRequest(request).asString();
             session.close();
             session = null;
+            logger.info(response);
             return response;
         } finally {
             if (null != session) {

@@ -75,6 +75,9 @@ public class SimpleLogger extends Logger {
      */
     static public final String LOG_LEVEL = "LOG_LEVEL";
 
+
+    static public final String LOG_FORMATTER = "LOG_FORMATTER";
+
     /**
      * 
      */
@@ -150,6 +153,7 @@ public class SimpleLogger extends Logger {
                 LOG_FILEHANDLER_COUNT, "1"));
         int logFileLimit = Integer.parseInt(_prop.getProperty(
                 LOG_FILEHANDLER_LIMIT, "0"));
+        String logFormatter = _prop.getProperty(LOG_FORMATTER, "");
 
         Handler h = null;
         if (logHandler != null && logHandler.length > 0) {
@@ -182,7 +186,11 @@ public class SimpleLogger extends Logger {
                                 .println("cannot configure logging: exiting");
                         Runtime.getRuntime().exit(-1);
                     }
-                    h.setFormatter(new SimpleFormatter());
+                    if (logFormatter == "BareText") {
+                        h.setFormatter(new BareTextFormatter());
+                    } else {
+                        h.setFormatter(new SimpleFormatter());
+                    }
                 } else if (logHandler[i].equals("CONSOLE")) {
                     System.err.println("logging to " + logHandler[i]);
                     h = new ConsoleHandler();
@@ -231,7 +239,9 @@ public class SimpleLogger extends Logger {
             }
             fine("logging set to " + getLevel());
         }
-        info("setting up logging for: " + getName());
+        if (logFormatter != "BareText") {
+            info("setting up logging for: " + getName());
+        }
     } // setLogging
 
     public void logException(String message, Throwable exception) {
