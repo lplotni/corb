@@ -1,1 +1,23 @@
 For more information see "http://marklogic.github.com/corb/":http://marklogic.github.com/corb/
+
+This fork turns Corb into a text export tool. The return value of the tranform module is written to a file - one line per document. Useful for generating CSV files etc.
+
+<pre>
+(: transform.xqy :)
+declare variable $URI external;
+
+let $doc := fn:doc($URI)
+return 
+  fn:string-join(
+    $doc/foo/fn:string(),
+    $doc/bar/fn:string()
+  , ",")
+</pre>
+
+CORB will create output.log:
+
+<pre>
+foo,bar
+foo1,bar1
+etc...
+</pre>
