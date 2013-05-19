@@ -8,10 +8,10 @@ declare variable $URI external;
 
 let $doc := fn:doc($URI)
 return 
-  fn:string-join(
+  fn:string-join((
     $doc/foo/fn:string(),
     $doc/bar/fn:string()
-  , ",")
+  ), ",")
 </pre>
 
 CORB will create output.log:
