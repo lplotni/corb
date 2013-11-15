@@ -203,7 +203,6 @@ public class Manager implements Runnable {
 
         String outputFileNameFormat = System.getProperty(OUTPUT_FILE_NAME_FORMAT);
         if (outputFileNameFormat != null) {
-            System.out.println("Setting output file name format to [" + outputFileNameFormat + "]");
             options.setOutputLogFileNameFormat(outputFileNameFormat);
         }
         tm.run();
@@ -606,14 +605,13 @@ public class Manager implements Runnable {
         logger.info("cleaning up");
         if (null != pool) {
             List<Runnable> remaining = pool.shutdownNow();
-            if (remaining.size() > 0) {
+            if (remaining != null && remaining.size() > 0) {
                 logger.warning("thread pool was shut down with "
                         + remaining.size() + " pending tasks");
             }
             pool = null;
         }
         if (null != monitor) {
-            pool.shutdownNow();
             monitor.shutdownNow();
         }
         if (null != monitorThread) {
