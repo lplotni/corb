@@ -36,7 +36,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -72,6 +71,8 @@ import com.marklogic.xcc.types.XdmItem;
  * @author Colleen Whitney, MarkLogic Corporation
  */
 public class Manager implements Runnable {
+
+    public static final String OUTPUT_FILE_NAME_FORMAT = "output.file.name.format";
 
     public static String VERSION = "2012-03-14.1";
 
@@ -198,6 +199,12 @@ public class Manager implements Runnable {
         if (args.length > 7 && !args[7].equals("")) {
             if (args[7].equals("false") || args[7].equals("0"))
                 options.setDoInstall(false);
+        }
+
+        String outputFileNameFormat = System.getProperty(OUTPUT_FILE_NAME_FORMAT);
+        if (outputFileNameFormat != null) {
+            System.out.println("Setting output file name format to [" + outputFileNameFormat + "]");
+            options.setOutputLogFileNameFormat(outputFileNameFormat);
         }
         tm.run();
     }
@@ -587,7 +594,7 @@ public class Manager implements Runnable {
         }
         Properties props = new Properties();
         props.setProperty("LOG_HANDLER", "FILE");
-        props.setProperty("LOG_FILEHANDLER_PATH", "output-%u-%g.log");
+        props.setProperty("LOG_FILEHANDLER_PATH", options.getOutputLogFileNameFormat());
         props.setProperty("LOG_FORMATTER", "BareText");
         outputLogger.configureLogger(props);
     }

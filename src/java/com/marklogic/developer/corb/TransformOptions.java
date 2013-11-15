@@ -41,6 +41,8 @@ public class TransformOptions {
 
     public static final String QUERY_TYPE = "QUERY";
 
+    public static final String DEFAULT_OUTPUT_LOG_FILE_NAME_FORMAT = "output-%u-%g.log";
+
     private String processModule = null;
 
     // Defaults for optional arguments
@@ -59,6 +61,8 @@ public class TransformOptions {
 
     // Set on status check
     private String XDBC_ROOT = SLASH;
+
+    private String outputLogFileNameFormat = DEFAULT_OUTPUT_LOG_FILE_NAME_FORMAT;
 
     /**
      * @return
@@ -179,6 +183,14 @@ public class TransformOptions {
      */
     public int getQueueSize() {
         return 100 * 1000;
+    }
+    
+    public String getOutputLogFileNameFormat() {
+        return outputLogFileNameFormat;
+    }
+    
+    public void setOutputLogFileNameFormat(String pathFormat) {
+        this.outputLogFileNameFormat = pathFormat;
     }
 
 }
